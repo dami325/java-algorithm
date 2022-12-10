@@ -1,8 +1,6 @@
-# java_algorithm
-This is a auto push repository for Baekjoon Online Judge created with [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub).
-# 자바 알고리즘 문제 풀이<br>
+# 자바 알고리즘 풀이 저장소br>
 심심할때 끄적끄적 <br>
-#BOJ #프로그래머스 <br><br>
+#백준 #프로그래머스 <br><br>
 
 <details markdown="1">
 <summary><strong> SQL </strong></summary>
