@@ -1,4 +1,4 @@
-# 자바 알고리즘 풀이 저장소<br>
+# [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub)<br>
 심심할때 끄적끄적 <br>
 #백준 #프로그래머스 <br><br>
 
