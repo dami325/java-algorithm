@@ -1,5 +1,4 @@
 # [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub)<br>
-심심할때 끄적끄적 <br>
 #백준 #프로그래머스 <br><br>
 
 <details markdown="1">
