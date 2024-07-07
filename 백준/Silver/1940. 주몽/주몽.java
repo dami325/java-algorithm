@@ -1,38 +1,45 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int N = sc.nextInt(); // 재료개수
-        int M = sc.nextInt(); // 갑옷만드는데 필요한수
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+        int n = Integer.parseInt(br.readLine());
+        int m = Integer.parseInt(br.readLine());
 
-        int[] arr = new int[N];
-        for (int i = 0; i < N; i++) {
-            arr[i] = sc.nextInt();
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int[] arr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        int start = 0;
-        int end = N - 1;
+        int leftIndex = 0;
+        int rightIndex = n - 1;
         int count = 0;
-
-        int[] array = Arrays.stream(arr).sorted().toArray();
-
         int sum = 0;
-        while (start != end) {
-            sum = array[start] + array[end];
-            if (sum == M) {
-                count++;
-                if(start + 1 == end) break;
-                start++;
-                end--;
-            } else if (sum > M) {
-                end--;
-            } else if (sum < M) {
-                start++;
+
+        while (rightIndex > 0) {
+
+            if (leftIndex == rightIndex) {
+                leftIndex = 0;
+                rightIndex--;
+                continue;
             }
+
+            sum = arr[leftIndex] + arr[rightIndex];
+
+            if (sum == m) {
+                count++;
+            }
+
+            leftIndex++;
         }
+
         System.out.println(count);
 
     }
