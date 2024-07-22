@@ -1,30 +1,51 @@
+import java.util.Arrays;
+import java.util.Stack;
+
 class Solution {
     
+private static Stack<Bag> stack = new Stack<>();
+
     private static int[] answer;
-    
+
     public static int[] solution(int[] numbers) {
         int length = numbers.length;
 
         answer = new int[length];
 
-        int lastIndex = length - 1;
+        Arrays.fill(answer, -1);
 
-        answer[lastIndex] = -1;
-
-        for (int i = 0; i < lastIndex; i++) {
+        for (int i = 0; i < length-1; i++) {
             int left = numbers[i];
-            answer[i] = -1;
-
-            for (int j = i + 1; j < length; j++) {
-                int right = numbers[j];
-                if (left < right) {
-                    answer[j] = right;
-                    break;
+            int right = numbers[i + 1];
+            if (left < right) {
+                answer[i] = right;
+                while (!stack.isEmpty() && stack.peek().value < right) {
+                    Bag bag = stack.pop();
+                    answer[bag.index] = right;
                 }
-
+            } else {
+                stack.push(new Bag(i, left));
             }
         }
 
         return answer;
+    }
+
+    private static class Bag{
+
+        private int index;
+        private int value;
+
+        public Bag(int index, int value) {
+            this.index = index;
+            this.value = value;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] solution = solution(new int[]{2, 3, 3, 5});
+        for (int i : solution) {
+            System.out.print(i + " ");
+        }
     }
 }
