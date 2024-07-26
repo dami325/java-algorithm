@@ -5,15 +5,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 class Solution {
-
-
     public int[] solution(String[] genres, int[] plays) {
         List<Album> albumList = new ArrayList<>();
-        int[] tmp = new int[200];
 
-        String genre = null;
         for (int i = 0; i < genres.length; i++) {
-            genre = genres[i];
+            String genre = genres[i];
             int play = plays[i];
             albumList.add(new Album(i, genre, play));
         }
@@ -25,18 +21,14 @@ class Solution {
                                 Collectors.summingInt(Album::getPlays)
                         ));
 
-
-        List<Map.Entry<String, Integer>> sortMap = albumMap.entrySet().stream()
+        List<Map.Entry<String, Integer>> sortedGenres = albumMap.entrySet().stream()
                 .sorted((o1, o2) -> o2.getValue() - o1.getValue())
                 .collect(Collectors.toList());
 
-        int index = 0;
+        List<Integer> result = new ArrayList<>();
 
-        for (int i = 0; i < sortMap.size(); i++) {
-
-            Map.Entry<String, Integer> entry = sortMap.get(i);
-
-            List<Album> sortAlbum = albumList.stream()
+        for (Map.Entry<String, Integer> entry : sortedGenres) {
+            List<Album> sortedAlbums = albumList.stream()
                     .filter(album -> album.getGenres().equals(entry.getKey()))
                     .sorted((o1, o2) -> {
                         if (o2.getPlays() == o1.getPlays()) {
@@ -46,31 +38,27 @@ class Solution {
                     })
                     .collect(Collectors.toList());
 
-            Iterator<Album> iterator = sortAlbum.iterator();
+            Iterator<Album> iterator = sortedAlbums.iterator();
             int count = 0;
-            while (iterator.hasNext()){
-                if (count == 2) {
-                    break;
-                }
-                tmp[index++] = iterator.next().albumId;
+            while (iterator.hasNext() && count < 2) {
+                result.add(iterator.next().getAlbumId());
                 count++;
             }
-
         }
 
-        int[] answer = new int[index];
-
-        for (int i = 0; i < index; i++) {
-            answer[i] = tmp[i];
-        }
-
-        return answer;
+        return result.stream().mapToInt(i -> i).toArray();
     }
 
     class Album {
-        private int albumId;
-        private String genres;
-        private int plays;
+        private final int albumId;
+        private final String genres;
+        private final int plays;
+
+        public Album(int albumId, String genres, int plays) {
+            this.albumId = albumId;
+            this.genres = genres;
+            this.plays = plays;
+        }
 
         public int getAlbumId() {
             return albumId;
@@ -82,12 +70,6 @@ class Solution {
 
         public int getPlays() {
             return plays;
-        }
-
-        public Album(int albumId, String genres, int plays) {
-            this.albumId = albumId;
-            this.genres = genres;
-            this.plays = plays;
         }
     }
 }
