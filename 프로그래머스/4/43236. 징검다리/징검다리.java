@@ -1,39 +1,56 @@
 import java.util.*;
 
 class Solution {
+
     public int solution(int distance, int[] rocks, int n) {
-        if (rocks.length == n) return distance;
+        
+        if(rocks.length == n) return distance;
+
         Arrays.sort(rocks);
-        int rockCount = rocks.length;
 
-        int l = Math.min(rocks[0],distance-rocks[rockCount-n-1]); // 적어도 이 이상이어야 함 
-        int res = l;
-        for (int i = 1; i < rockCount-n; i++) l = Math.min(rocks[i]-rocks[i-1],l);
+        int[] d = new int[rocks.length+1];
+        d[0] = rocks[0];
+        d[d.length-1] = distance - rocks[rocks.length-1];
 
-        // in case of even distribution, remaining rocks = rockCount-n+2
-        int remainingRocks = rockCount-n+2;
-        int r = distance % (remainingRocks-1) == 0 ? distance/(remainingRocks-1) : distance/(remainingRocks-1)+1;
-
-        while (l <= r) {
-            int m = (l+r)/2;
-            if (possible(m,rocks,rockCount-n,distance)) l = m+1;
-            else r = m-1;
+        for(int i = 1 ; i < rocks.length ; i++){
+            d[i] = rocks[i] - rocks[i-1];
         }
-        return r;
-    }
 
-    public boolean possible(int minDist, int[] rocks, int count, int distance) {
-        int prevRock = 0;
-        for (int i = 0; i < rocks.length; i++) {
-            if (rocks[i] - prevRock >= minDist) {
-                count--;
-                if (count == 0) {
-                    if (distance-rocks[i] >= minDist) return true;
-                    return false;
+
+        int left = 0;
+        int right = distance;
+
+        while(left < right){
+
+
+            int mid = (left + right)/2;
+
+            int removedStone = 0;
+            int cur = 0;
+            for(int i = 0 ; i < d.length ; i++){
+
+                cur += d[i];
+
+                if(cur < mid){
+                    removedStone++;
+                } else {
+                    cur=0;
                 }
-                prevRock = rocks[i];
+
             }
+
+            if(removedStone < n){
+                left = mid+1;
+            } else if(removedStone > n){
+                right = mid;
+            } else {
+                left = mid+1;
+            }
+
+
         }
-        return false;
+
+        return left-1;
+
     }
 }
