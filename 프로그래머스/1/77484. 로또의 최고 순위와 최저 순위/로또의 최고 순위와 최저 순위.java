@@ -20,7 +20,6 @@ class Solution {
                 .count();
 
         int sameCount = (int) Arrays.stream(lottos)
-                .filter(value -> value != 0)
                 .filter(
                         lottoNum -> Arrays.stream(win_nums).anyMatch(winNum -> winNum == lottoNum)
                 )
