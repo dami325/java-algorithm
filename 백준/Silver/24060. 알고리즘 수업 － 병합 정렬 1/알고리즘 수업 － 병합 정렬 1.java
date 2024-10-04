@@ -5,78 +5,65 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    private static int k;
-    private static int cnt = 0;
-    private static int result = -1;
-    private static int[] tmp;
+    private static int count, k;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int n = Integer.parseInt(st.nextToken());
+        int a = Integer.parseInt(st.nextToken());
         k = Integer.parseInt(st.nextToken());
 
+
+        int[] arr = new int[a];
+        int[] temp = new int[a];
         st = new StringTokenizer(br.readLine());
-
-        int[] arr = new int[n];
-        tmp = new int[n];
-
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < a; i++) {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        mergeSort(arr, 0, n - 1);
+        mergeSort(arr,temp, 0, a - 1);
 
-        System.out.println(result);
-    }
-
-    private static void mergeSort(int[] arr, int leftIndex, int rightIndex){
-        if (cnt > k) {
-            return;
-        }
-        // leftIndex는 항상 0 즉 오른쪽 인덱스가 1 이상일경우만 수행
-        if (leftIndex < rightIndex) {
-            int index = leftIndex + rightIndex;
-            int middleIndex = index / 2;
-            mergeSort(arr, leftIndex,middleIndex); // 0 ~ 중간까지
-            mergeSort(arr, middleIndex + 1, rightIndex); // 중간+1 ~ 끝까지
-            merge(arr, leftIndex, middleIndex, rightIndex); // 병합 수행
+        if(count < k) {
+            System.out.println(-1);
         }
     }
 
-    private static void merge(int[] arr, int leftIndex, int middleIndex, int lastIndex){
-        int leftStart = leftIndex;
-        int rightStart = middleIndex + 1;
-        int tmpIndex = 0;
+    // start = 1, end = 5, middle = 2
+    private static void mergeSort(int[] arr,int[] temp, int start, int end) {
+        if (start < end) {
+            int middle = (start + end) / 2;
+            mergeSort(arr,temp, start, middle);
+            mergeSort(arr,temp, middle + 1, end);
+            merge(arr,temp, start, middle, middle + 1, end);
+        }
+    }
 
-        while (leftStart <= middleIndex && rightStart <= lastIndex) {
-            if (arr[leftStart] < arr[rightStart]) {
-                tmp[tmpIndex] = arr[leftStart];
-                leftStart++;
+    private static void merge(int[] arr,int[] temp, int start, int middle, int rightStart , int end) {
+        int leftIndex = start;
+        int tempIndex = start;
+        while (start <= middle && rightStart <= end) {
+            if (arr[start] <= arr[rightStart]) {
+                temp[tempIndex++] = arr[start++];
             } else {
-                tmp[tmpIndex] = arr[rightStart];
-                rightStart++;
+                temp[tempIndex++] = arr[rightStart++];
             }
-            tmpIndex++;
         }
 
-        while (leftStart <= middleIndex) {
-            tmp[tmpIndex++] = arr[leftStart++];
+        while (start <= middle) {
+            temp[tempIndex++] = arr[start++];
         }
 
-        while (rightStart <= lastIndex) {
-            tmp[tmpIndex++] = arr[rightStart++];
+        while (rightStart <= end) {
+            temp[tempIndex++] = arr[rightStart++];
         }
 
-        tmpIndex = 0;
-        for (int i = leftIndex; i <= lastIndex; i++) {
-            cnt++;
-            if(cnt == k){
-                result = tmp[tmpIndex];
-                break;
+        for (int i = leftIndex; i <= end; i++) {
+            count++;
+            arr[i] = temp[i];
+            if(count == k) {
+                System.out.println(temp[i]);
             }
-            arr[i] = tmp[tmpIndex++];
         }
     }
 }
