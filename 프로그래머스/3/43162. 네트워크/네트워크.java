@@ -1,51 +1,57 @@
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 class Solution {
+
+    private int result,n;
+    private Set<Integer> visited = new HashSet<>();
+    private Stack<Integer> stack = new Stack<>();
+    private int[][] computers;
+    private HashSet<Integer>[] graph;
     public int solution(int n, int[][] computers) {
-        int[] unionFind = new int[n];
+      this.computers = computers;
+      this.n = n;
+      this.graph = new HashSet[n];
 
-        for (int i = 0; i < n; i++) {
-            unionFind[i] = i;
+      for (int i = 0; i < n; i++) {
+        graph[i] = new HashSet<>();
+      }
+
+      for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+          if (i != j && computers[i][j] == 1) {
+            graph[i].add(j);
+            graph[j].add(i);
+          }
         }
+      }
 
-        for (int i = 0; i < computers.length; i++) {
-            for (int j = 0; j < computers[i].length - 1; j++) {
+      for (int i = 0; i < n; i++) {
+        if (!visited.contains(i)) {
+          result++;
+          dfs(i);
+        }
+      }
 
-                if (i == j)
-                    continue;
+      return result;
+    }
 
-                if (computers[i][j] == 1) {
-                    union(unionFind, Math.min(i, j), Math.max(i, j));
-                }
+    private void dfs(int index) {
+      stack.push(index);
 
+      while (!stack.isEmpty()) {
+        Integer node = stack.pop();
+
+        if (!visited.contains(node)) {
+          visited.add(node);
+          HashSet<Integer> edgeSet = graph[node];
+          for (Integer edge : edgeSet) {
+            if (!visited.contains(edge)) {
+              stack.push(edge);
             }
+          }
         }
-
-        Set<Integer> resultSet = new HashSet<>();
-
-        for (int i = 0; i < unionFind.length; i++) {
-            resultSet.add(find(unionFind, i));
-        }
-
-        return resultSet.size();
+      }
     }
-
-    private void union(int[] arr, int a, int b) {
-        a = find(arr, a);
-        b = find(arr, b);
-        if (a != b) {
-            arr[b] = a;
-        }
-    }
-
-    private int find(int[] arr, int a) {
-        if (a == arr[a])
-            return a;
-
-        int findA = find(arr, arr[a]);
-        arr[a] = findA;
-
-        return findA;
-    }
-}
+  }
