@@ -1,48 +1,33 @@
-import java.io.IOException;
+import java.util.Comparator;
 import java.util.PriorityQueue;
-
-import static java.util.Comparator.reverseOrder;
-
 class Solution {
+
+    private PriorityQueue<Integer> maxQueue = new PriorityQueue<>(Comparator.reverseOrder());
+    private PriorityQueue<Integer> minQueue = new PriorityQueue<>(Integer::compareTo);
+
     public int[] solution(String[] operations) {
-        PriorityQueue<Integer> lowQueue = new PriorityQueue<>();
-        PriorityQueue<Integer> highQueue = new PriorityQueue<>(reverseOrder());
-
-        for (String operation : operations) {
-            switch (operation) {
-                case "D 1" : {
-                    if (lowQueue.isEmpty() && highQueue.isEmpty()) {
-                        break;
-                    }
-                    if(highQueue.isEmpty()){
-                        highQueue.remove(lowQueue.poll());
-                    }else {
-                        lowQueue.remove(highQueue.poll());
-                    }
-                    break;
-                }
-                case "D -1" : {
-                    if (lowQueue.isEmpty() && highQueue.isEmpty()) {
-                        break;
-                    }
-                    if(lowQueue.isEmpty()){
-                        lowQueue.remove(highQueue.poll());
-                    }else {
-                        highQueue.remove(lowQueue.poll());
-                    }
-                    break;
-                }
-                default: {
-                    int val = Integer.parseInt(operation.split(" ")[1]);
-                    lowQueue.add(val);
-                    highQueue.add(val);
-                }
+      for (String operation : operations) {
+        String[] command = operation.split(" ");
+        int value = Integer.parseInt(command[1]);
+        switch (command[0]) {
+          case "I": {
+            maxQueue.add(value);
+            minQueue.add(value);
+            break;
+          }
+          case "D": {
+            if (value == 1) {
+              minQueue.remove(maxQueue.poll());
+            } else {
+              maxQueue.remove(minQueue.poll());
             }
+            break;
+          }
         }
-
-        if (lowQueue.size() > 0) {
-            return new int[]{highQueue.poll(), lowQueue.poll()};
-        }
+      }
+      if (maxQueue.isEmpty()) {
         return new int[]{0, 0};
+      }
+      return new int[]{maxQueue.poll(), minQueue.poll()};
     }
-}
+  }
